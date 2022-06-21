@@ -7,18 +7,18 @@ const User = require('../models/user')
 // @route   POST /users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { firstName, lastName, email, password, phone } = req.body
+    const { firstName, lastName, email, password, phone,role,company } = req.body
 
     if (!firstName || !lastName || !email || !password || !phone) {
-        res.status(400)
-        throw new Error('Please add all fields')
+        res.status(400).json({ message: "Please add all fields" });
+
     }
 
     // Check if user exists
     const userExists = await User.findOne({ email })
 
     if (userExists) {
-        res.status(400)
+        res.status(400).json({ message: "user already exist" });
         throw new Error('User already exists')
     }
 
@@ -32,7 +32,7 @@ const registerUser = asyncHandler(async (req, res) => {
         lastName,
         email,
         password,
-        role: "COMPANY_ADMIN",
+        role,
         phone,
         password: hashedPassword,
     })
@@ -40,12 +40,12 @@ const registerUser = asyncHandler(async (req, res) => {
     if (user) {
         res.status(201).json({
             _id: user.id,
-            name: user.name,
+            firstName: user.firstName,
             email: user.email,
             token: generateToken(user._id),
         })
     } else {
-        res.status(400)
+        res.status(400).json({ message: "Invalid user data" });
         throw new Error('Invalid user data')
     }
 })
@@ -64,6 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
+            role:user.role,
             token: generateToken(user._id),
         })
     } else {
