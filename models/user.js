@@ -13,7 +13,8 @@ var User = new Schema(
         },
         password: String,
         phone: Number,
-        role: String,
+        role: [String],
+
         verified: {
             type: Boolean,
             required: true,

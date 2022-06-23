@@ -78,7 +78,6 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /users/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
-    console.log(req)
     res.status(200).json(req.user)
 })
 
@@ -91,10 +90,16 @@ const generateToken = (id) => {
     })
 }
 
+const getAllUsers = async (req, res) => {
+    User.find({}, function (err, users) {
+    res.send(users)
+  });
 
+}
 
 module.exports = {
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    getAllUsers
 }
