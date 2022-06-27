@@ -3,18 +3,15 @@ var Schema = mongoose.Schema;
 
 var Company = new Schema(
     {
-        name: String,
-        adress: String,
-        email: {
-            type: "string",
-            trim: true,
-            unique: true,
-        },
-        pays: String,
-        codepostal: String,
+        companyname: String,
+        companyadress: String,
+        city: String,
+        country: String,
+        postalcode: String,
+        AdminCompany: { type: Schema.Types.ObjectId, ref: "users" },
         employees: [
             {
-                employee: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                employee: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
             },
         ],
 

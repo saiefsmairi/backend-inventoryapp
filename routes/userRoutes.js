@@ -1,15 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const {
-  registerUser,loginUser,getMe,getAllUsers
+  registerUser,loginUser,getMe,getAllUsers,deleteAllUsers
 } = require('../controllers/userController')
 const { protect } = require('../middleware/authMiddleware')
-const ROLES_LIST = require('../config/roles_list');
 const verifyRoles = require('../middleware/verifyRoles');
 
 router.post('/', registerUser)
 router.post('/login', loginUser)
-router.get('/me', protect,verifyRoles("ROLE_ADMIN_COMPANY"),getMe)
-//router.get('/users',protect, verifyRoles(ROLES_LIST.ROLE_ADMIN_COMPANY),getAllUsers)
+router.get('/me', protect,getMe)
+router.get('/users', protect,getAllUsers)
+router.delete('/:id',deleteAllUsers)
 
+
+//router.get('/me', protect,verifyRoles("ROLE_ADMIN_COMPANY"),getMe)
+
+//i need to check for every method token and i need to do route protection based on roles 
 module.exports = router
