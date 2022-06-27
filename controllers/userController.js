@@ -7,7 +7,7 @@ const User = require('../models/user')
 // @route   POST /users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { firstName, lastName, email, password, phone,role,company } = req.body
+    const { firstName, lastName, email, password, phone, role, company } = req.body
 
     if (!firstName || !lastName || !email || !password || !phone) {
         res.status(400).json({ message: "Please add all fields" });
@@ -64,7 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
-            role:user.role,
+            role: user.role,
             token: generateToken(user._id),
         })
     } else {
@@ -91,15 +91,26 @@ const generateToken = (id) => {
 }
 
 const getAllUsers = async (req, res) => {
-    User.find({}, function (err, users) {
-    res.send(users)
-  });
+    User.find({ role: 'ROLE_ADMIN_COMPANY' }, function (err, users) {
+        res.send(users)
+    });
 
 }
+
+const deleteAllUsers = async (req, res) => {
+    id = req.params.id;
+    User.findByIdAndDelete(id, (err, data) => {
+        res.status(200).json({ message: 'user deleteed' })
+
+    });
+}
+
+
 
 module.exports = {
     registerUser,
     loginUser,
     getMe,
-    getAllUsers
+    getAllUsers,
+    deleteAllUsers
 }
