@@ -8,6 +8,12 @@ const User = require('../models/user')
 const addCompany = asyncHandler(async (req, res) => {
     const { city, companyadress, companyname, country, postalcode, idcompanyadmin } = req.body
 
+
+    if (!city || !companyadress || !companyname || !country || !postalcode) {
+        res.status(400).json({ message: "Please add all fields" });
+
+    }
+
     User.findById(idcompanyadmin, (err, data) => {
         const company = Company.create({
             city,
@@ -41,8 +47,21 @@ const FindCompanyByAdminCompanyId = async (req, res) => {
 
 }
 
+const updateCompany = async (req, res, next) => {
+    console.log(req.body)
+    const updatedUser = await Company.findByIdAndUpdate(req.params.id, req.body, {});
+  
+    res.status(200).json({
+      status: 'success',
+      data: {
+        company: updatedUser,
+      },
+    });
+  };
+
 
 module.exports = {
     addCompany,
-    FindCompanyByAdminCompanyId
+    FindCompanyByAdminCompanyId,
+    updateCompany
 }
