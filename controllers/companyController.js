@@ -40,7 +40,7 @@ const addCompany = asyncHandler(async (req, res) => {
 
 const FindCompanyByAdminCompanyId = async (req, res) => {
     Company.find({ AdminCompany: req.params.id }, function (err, company) {
-      
+
         res.status(200).json(company)
 
     });
@@ -50,18 +50,63 @@ const FindCompanyByAdminCompanyId = async (req, res) => {
 const updateCompany = async (req, res, next) => {
     console.log(req.body)
     const updatedUser = await Company.findByIdAndUpdate(req.params.id, req.body, {});
-  
+
     res.status(200).json({
-      status: 'success',
-      data: {
-        company: updatedUser,
-      },
+        status: 'success',
+        data: {
+            company: updatedUser,
+        },
     });
-  };
+};
+
+
+const updateCompanyAddEmployees = async (req, res, next) => {
+    console.log(req.body)
+    User.findById({ _id: req.body.userid }, function (err, user) {
+
+        const company = Company.findById({ _id: req.body.companyid })
+        if (company) {
+            try {
+                Company.findByIdAndUpdate({ _id: req.body.companyid }, { $push: { employees: user } }, function (err, ff) {
+                    console.log(ff)
+                    if (err) {
+                        res.status(400).json({
+                            status: 'failed',
+                            message: 'error is updateCompanyAddEmployees method',
+
+                        });
+
+                    }
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'an employee has been added to the company succesfully',
+                        data: {
+                            company: ff,
+                        },
+                    });
+                })
+
+
+            } catch (error) {
+                console.log(error)
+            }
+
+        } else {
+            res.status(400)
+            throw new Error('no company with that id')
+        }
+
+    });
+
+
+
+
+};
 
 
 module.exports = {
     addCompany,
     FindCompanyByAdminCompanyId,
-    updateCompany
+    updateCompany,
+    updateCompanyAddEmployees
 }
