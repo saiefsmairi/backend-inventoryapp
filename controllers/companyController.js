@@ -43,7 +43,7 @@ const FindCompanyByAdminCompanyId = async (req, res) => {
 
         res.status(200).json(company)
 
-    });
+    }).populate('employees.employee').populate('AdminCompany');
 
 }
 
@@ -61,13 +61,12 @@ const updateCompany = async (req, res, next) => {
 
 
 const updateCompanyAddEmployees = async (req, res, next) => {
-    console.log(req.body)
     User.findById({ _id: req.body.userid }, function (err, user) {
 
         const company = Company.findById({ _id: req.body.companyid })
         if (company) {
             try {
-                Company.findByIdAndUpdate({ _id: req.body.companyid }, { $push: { employees: user } }, function (err, ff) {
+                Company.findByIdAndUpdate({ _id: req.body.companyid }, { $push: { employees: { employee: user } } }, function (err, ff) {
                     console.log(ff)
                     if (err) {
                         res.status(400).json({
@@ -98,8 +97,48 @@ const updateCompanyAddEmployees = async (req, res, next) => {
 
     });
 
+};
+
+const deleteEmployeeFromCompany = async (req, res, next) => {
+
+    User.findById({ _id: req.body.userid }, function (err, user) {
+
+        const company = Company.findById({ _id: req.body.companyid })
+        if (company) {
+            try {
+                Company.findByIdAndUpdate({ _id: req.body.companyid }, { $pull: { employees: { employee: user } } }, function (err, ff) {
+                    console.log(ff)
+                    if (err) {
+                        res.status(400).json({
+                            status: 'failed',
+                            message: 'error is deleteEmployeeFromCompany method',
+
+                        });
+
+                    }
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'an employee has been deleted from the company succesfully',
+                        data: {
+                            company: ff,
+                        },
+                    });
+                })
 
 
+            } catch (error) {
+                console.log(error)
+            }
+
+        } else {
+            res.status(400)
+            throw new Error('no company with that id')
+        }
+
+    });
+
+    
+    User.findByIdAndDelete(req.body.userid) ;
 
 };
 
@@ -108,5 +147,6 @@ module.exports = {
     addCompany,
     FindCompanyByAdminCompanyId,
     updateCompany,
-    updateCompanyAddEmployees
+    updateCompanyAddEmployees,
+    deleteEmployeeFromCompany
 }

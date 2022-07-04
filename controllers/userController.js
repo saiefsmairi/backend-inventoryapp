@@ -99,10 +99,19 @@ const getAllUsers = async (req, res) => {
 
 const deleteAllUsers = async (req, res) => {
     id = req.params.id;
+    console.log(id)
     User.findByIdAndDelete(id, (err, data) => {
         res.status(200).json({ message: 'user deleteed' })
 
     });
+}
+
+const deleteusersApi = async (req, res) => {
+    User.deleteMany({role: "ROLE_EMPLOYEE"}, (err, data) => {
+        res.status(200).json({ message: err })
+
+    });
+   
 }
 
 
@@ -112,5 +121,6 @@ module.exports = {
     loginUser,
     getMe,
     getAllUsers,
-    deleteAllUsers
+    deleteAllUsers,
+    deleteusersApi
 }
