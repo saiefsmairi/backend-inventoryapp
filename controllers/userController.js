@@ -99,11 +99,73 @@ const getAllUsers = async (req, res) => {
 
 const deleteAllUsers = async (req, res) => {
     id = req.params.id;
+    console.log(id)
     User.findByIdAndDelete(id, (err, data) => {
         res.status(200).json({ message: 'user deleteed' })
 
     });
 }
+
+const deleteusersApi = async (req, res) => {
+    User.deleteMany({ role: "ROLE_EMPLOYEE" }, (err, data) => {
+        res.status(200).json({ message: err })
+
+    });
+
+}
+
+//Admin societe updating employee informations 
+const updateUser = async (req, res, next) => {
+
+    const email = req.body.email
+    // Check if user exists
+    const user = await User.findById(req.params.id);
+
+    let updatedUser = null
+
+
+    if (email != user.email) {
+        const userExists = await User.findOne({ email })
+        if (userExists) {
+            res.status(400).json({ message: "user with that email already exists " });
+        }
+        else if (!userExists) {
+            if (typeof req.body.password === 'undefined') {
+                updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+            }
+            else {
+                const salt = await bcrypt.genSalt(10)
+                req.body.password = await bcrypt.hash(req.body.password, salt)
+                updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+            }
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    user: updatedUser,
+                },
+            });
+        }
+
+    }
+    else {
+        if (typeof req.body.password === 'undefined') {
+            updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+        }
+        else {
+            const salt = await bcrypt.genSalt(10)
+            req.body.password = await bcrypt.hash(req.body.password, salt)
+            updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user: updatedUser,
+            },
+        });
+    }
+};
 
 
 
@@ -112,5 +174,7 @@ module.exports = {
     loginUser,
     getMe,
     getAllUsers,
-    deleteAllUsers
+    deleteAllUsers,
+    deleteusersApi,
+    updateUser
 }

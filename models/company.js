@@ -11,7 +11,7 @@ var Company = new Schema(
         AdminCompany: { type: Schema.Types.ObjectId, ref: "users" },
         employees: [
             {
-                employee: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+                employee: { type: Schema.Types.ObjectId, ref: "users" },
             },
         ],
 
