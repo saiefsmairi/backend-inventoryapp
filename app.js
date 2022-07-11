@@ -8,7 +8,6 @@ var cors = require("cors");
 var mongoose = require("mongoose");
 const dotenv = require('dotenv').config();
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/userRoutes');
 
 var app = express();
 
@@ -26,6 +25,8 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', require('./routes/userRoutes'));
 app.use('/company', require('./routes/companyRoutes'));
+app.use('/area', require('./routes/areaRoutes'));
+//app.use('/zone', require('./routes/zoneRoutes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

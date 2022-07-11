@@ -91,7 +91,7 @@ const generateToken = (id) => {
 }
 
 const getAllUsers = async (req, res) => {
-    User.find({ role: 'ROLE_ADMIN_COMPANY' }, function (err, users) {
+    User.find({ }, function (err, users) {
         res.send(users)
     });
 
