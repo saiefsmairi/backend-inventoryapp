@@ -14,7 +14,11 @@ var Company = new Schema(
                 employee: { type: Schema.Types.ObjectId, ref: "users" },
             },
         ],
-
+        areas: [
+            {
+                area: { type: Schema.Types.ObjectId, ref: "areas" },
+            },
+        ],
     }
 );
 

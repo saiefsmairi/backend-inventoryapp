@@ -43,7 +43,7 @@ const FindCompanyByAdminCompanyId = async (req, res) => {
 
         res.status(200).json(company)
 
-    }).populate('employees.employee').populate('AdminCompany');
+    }).populate('employees.employee').populate('AdminCompany').populate('areas.area');
 
 }
 
