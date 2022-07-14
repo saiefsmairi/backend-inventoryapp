@@ -7,12 +7,12 @@ const Area = require('../models/area')
 // @route   POST /area
 // @access  Public
 const addArea = asyncHandler(async (req, res) => {
-    const { code, namearea, companyid } = req.body
+    const { code, name, companyid } = req.body
     console.log(req.body)
     const area = await Area.create(
         {
             code,
-            name: namearea,
+            name
         }
     )
     const company = Company.findById({ _id: req.body.companyid })
@@ -104,8 +104,22 @@ const deleteArea = async (req, res) => {
     });
 }
 
+const updateArea = async (req, res, next) => {
+    console.log(req.body)
+    const updatedArea = await Area.findByIdAndUpdate(req.params.id, req.body, {});
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            company: updatedArea,
+        },
+    });
+};
+
+
 module.exports = {
     addArea,
     deleteAreaFromCompany,
-    deleteArea
+    deleteArea,
+    updateArea
 }
