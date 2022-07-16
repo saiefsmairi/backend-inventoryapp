@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {
-    addArea,deleteAreaFromCompany,deleteArea
+    addArea,deleteAreaFromCompany,deleteArea,updateArea
 } = require('../controllers/areaController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
@@ -9,6 +9,7 @@ const verifyRoles = require('../middleware/verifyRoles');
 router.put('/', addArea)
 router.put('/updateCompany/RemoveAreaFromCompany',deleteAreaFromCompany)
 router.delete('/deletearea/:id', deleteArea)
+router.put('/updatearea/:id', updateArea)
 
 
 
