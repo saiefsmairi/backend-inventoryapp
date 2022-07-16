@@ -6,7 +6,7 @@ const {
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
-router.put('/', addZone)
+//router.put('/', addZone)
 /* router.put('/updateCompany/RemoveAreaFromCompany',deleteAreaFromCompany)
 router.delete('/deletearea/:id', deleteArea)
 router.put('/updatearea/:id', updateArea)

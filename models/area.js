@@ -10,6 +10,8 @@ var Area = new Schema(
                 zone: { type: Schema.Types.ObjectId, ref: "zones" },
             },
         ],
+        company: { type: Schema.Types.ObjectId, ref: "companies" },
+
     }
 );
 

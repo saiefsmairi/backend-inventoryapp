@@ -26,7 +26,8 @@ app.use('/', indexRouter);
 app.use('/users', require('./routes/userRoutes'));
 app.use('/company', require('./routes/companyRoutes'));
 app.use('/area', require('./routes/areaRoutes'));
-//app.use('/zone', require('./routes/zoneRoutes'));
+app.use('/zone', require('./routes/zoneRoutes'));
+app.use('/affectation', require('./routes/AffectationRoutes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
