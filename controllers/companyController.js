@@ -38,12 +38,14 @@ const addCompany = asyncHandler(async (req, res) => {
 
 })
 
+
 const FindCompanyByAdminCompanyId = async (req, res) => {
     Company.find({ AdminCompany: req.params.id }, function (err, company) {
 
         res.status(200).json(company)
 
     }).populate('employees.employee').populate('AdminCompany').populate('areas.area');
+    //i need populate zone
 
 }
 

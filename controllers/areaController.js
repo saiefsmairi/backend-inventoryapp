@@ -5,14 +5,15 @@ const Area = require('../models/area')
 
 // @desc    add new area and assign it a company
 // @route   POST /area
-// @access  Public
+// @access  Public 
 const addArea = asyncHandler(async (req, res) => {
     const { code, name, companyid } = req.body
     console.log(req.body)
     const area = await Area.create(
         {
             code,
-            name
+            name,
+            company: req.body.companyid
         }
     )
     const company = Company.findById({ _id: req.body.companyid })
@@ -116,10 +117,23 @@ const updateArea = async (req, res, next) => {
     });
 };
 
+const FindAreaAndTheirZonesByCompany = async (req, res) => {
+    Area.find({ company: req.params.companyid }, function (err, area) {
+
+        res.status(200).json(area)
+    }).populate('zones.zone')
+
+
+}
+
 
 module.exports = {
     addArea,
     deleteAreaFromCompany,
     deleteArea,
-    updateArea
+    updateArea,
+    FindAreaAndTheirZonesByCompany
 }
+
+//parcours over zones , w ne5dhoou area mte7hom , loop over area of the company x
+// company -> area -> zones
