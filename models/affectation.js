@@ -3,10 +3,12 @@ var Schema = mongoose.Schema;
 
 var Affectation = new Schema(
     {
-        user: { type: Schema.Types.ObjectId, ref: "users" },
+        employee: { type: Schema.Types.ObjectId, ref: "users" },
         zone: { type: Schema.Types.ObjectId, ref: "zones" },
-        datedebut: String,
-        datefin: String,
+        company: { type: Schema.Types.ObjectId, ref: "companies" },
+
+        Datedebut: String,
+        Datefin: String,
         state: String,
 
     }
