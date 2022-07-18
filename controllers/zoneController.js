@@ -36,6 +36,18 @@ const addZone = asyncHandler(async (req, res) => {
 
 })
 
+const FindZoneByArea = async (req, res, next) => {
+    var areas = []
+    areas.push(req.body.data)
+    areas.forEach(element => {
+        Zone.find({ area: element }, function (err, zone) {
+            res.status(200).json(zone)
+        })
+    });
+
+}
+
+
 
 /* const deleteAreaFromCompany = async (req, res, next) => {
 
@@ -105,5 +117,5 @@ const updateArea = async (req, res, next) => {
 
 module.exports = {
     addZone,
-
+    FindZoneByArea
 }

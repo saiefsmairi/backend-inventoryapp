@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const {
-    addZone
+    addZone,FindZoneByArea
 } = require('../controllers/zoneController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
 router.put('/', addZone)
+router.post('/getzonebyarea', FindZoneByArea)
+
 /* router.put('/updateCompany/RemoveAreaFromCompany',deleteAreaFromCompany)
 router.delete('/deletearea/:id', deleteArea)
 router.put('/updatearea/:id', updateArea)
