@@ -47,26 +47,20 @@ const FindZoneByArea = async (req, res, next) => {
 
 }
 
-
-
-/* const deleteAreaFromCompany = async (req, res, next) => {
-
-    Area.findById({ _id: req.body.areaid }, function (err, user) {
-
-        const company = Company.findById({ _id: req.body.companyid })
-        if (company) {
+const deleteZoneFromArea = async (req, res, next) => {
+    console.log(req.body)
+    Zone.findById({ _id: req.body.zoneid }, function (err, user) {
             try {
-                Company.findByIdAndUpdate({ _id: req.body.companyid }, { $pull: { areas: { area: user } } }, function (err, ff) {
+                Area.findByIdAndUpdate({ _id: req.body.areaid }, { $pull: { zones: { zone: user } } }, function (err, ff) {
                     console.log(ff)
                     if (err) {
                         res.status(400).json({
                             status: 'failed',
                             message: 'error is deleteAreaFromCompany method',
                         });
-
                     }
                     else {
-                        Area.findByIdAndDelete(req.body.areaid);
+                        Zone.findByIdAndDelete(req.body.zoneid);
                         res.status(200).json({
                             status: 'success',
                             message: 'an area has been deleted from the company succesfully',
@@ -80,27 +74,24 @@ const FindZoneByArea = async (req, res, next) => {
             } catch (error) {
                 console.log(error)
             }
-
-        } else {
-            res.status(400)
-            throw new Error('no company with that id')
-        }
-
     });
 
 
-    Area.findByIdAndDelete(req.body.areaid);
+    // Zone.findByIdAndDelete(req.body.areaid);
 
 };
 
-const deleteArea = async (req, res) => {
+const deleteZone = async (req, res) => {
     id = req.params.id;
     console.log(id)
-    Area.findByIdAndDelete(id, (err, data) => {
-        res.status(200).json({ message: 'area deleteed' })
+    Zone.findByIdAndDelete(id, (err, data) => {
+        res.status(200).json({ message: 'Zone deleteed' })
 
     });
 }
+
+
+/*
 
 const updateArea = async (req, res, next) => {
     console.log(req.body)
@@ -113,9 +104,11 @@ const updateArea = async (req, res, next) => {
         },
     });
 };
- */
+  */
 
 module.exports = {
     addZone,
-    FindZoneByArea
+    FindZoneByArea,
+    deleteZoneFromArea,
+    deleteZone
 }

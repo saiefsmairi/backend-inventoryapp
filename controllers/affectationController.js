@@ -9,18 +9,18 @@ const moment = require('moment');
 // @route   POST /affectation
 // @access  Public
 const addaffectation = asyncHandler(async (req, res) => {
-    const { Datedebut, Datefin,employee ,zone,company} = req.body
+    const { Datedebut, Datefin, employee, zone, company } = req.body
     console.log(req.body)
     const affectation = await Affectation.create(
         {
-            Datedebut:moment(Datedebut).format('YYYY-MM-DD'),
-            Datefin:moment(Datefin).format('YYYY-MM-DD'),
+            Datedebut: moment(Datedebut).format('YYYY-MM-DD'),
+            Datefin: moment(Datefin).format('YYYY-MM-DD'),
             employee,
             zone,
             company
         }
     )
-    if(affectation){
+    if (affectation) {
         res.status(200).json(affectation)
 
     }
@@ -34,8 +34,39 @@ const findAffectationByCompany = async (req, res) => {
 
 }
 
+const deleteAffectation = async (req, res) => {
+    id = req.params.affid;
+    console.log(id)
+    Affectation.findByIdAndDelete(id, (err, data) => {
+        res.status(200).json({ message: 'Affectation deleteed' })
+        if (err) {
+            res.status(400).json({
+                status: 'failed',
+                message: 'error is deleteAffectation method',
+
+            });
+
+        }
+    });
+}
+
+const updateAffectation = async (req, res, next) => {
+    console.log(req.params.id)
+    console.log(req.body)
+    
+    const updatedAffectation = await Affectation.findByIdAndUpdate(req.params.id, req.body, {});
+    res.status(200).json({
+        status: 'success',
+        data: {
+            company: updatedAffectation,
+        },
+    });
+};
+
 
 module.exports = {
     addaffectation,
-    findAffectationByCompany
+    findAffectationByCompany,
+    deleteAffectation,
+    updateAffectation
 }
