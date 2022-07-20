@@ -91,24 +91,25 @@ const deleteZone = async (req, res) => {
 }
 
 
-/*
 
-const updateArea = async (req, res, next) => {
+
+const updateZone = async (req, res, next) => {
     console.log(req.body)
-    const updatedArea = await Area.findByIdAndUpdate(req.params.id, req.body, {});
+    const updatedZone = await Zone.findByIdAndUpdate(req.params.id, req.body, {});
 
     res.status(200).json({
         status: 'success',
         data: {
-            company: updatedArea,
+            company: updatedZone,
         },
     });
 };
-  */
+  
 
 module.exports = {
     addZone,
     FindZoneByArea,
     deleteZoneFromArea,
-    deleteZone
+    deleteZone,
+    updateZone
 }

@@ -1,20 +1,20 @@
 const express = require('express')
 const router = express.Router()
 const {
-    addZone,FindZoneByArea,deleteZoneFromArea,deleteZone,updateZone
-} = require('../controllers/zoneController')
+    addaffectation,findAffectationByCompany,deleteAffectation,updateAffectation
+} = require('../controllers/affectationController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
-router.put('/', addZone)
-router.post('/getzonebyarea', FindZoneByArea)
-router.put('/updateZone/RemoveZoneFromArea',deleteZoneFromArea)
-router.delete('/deletezone/:id', deleteZone)
-router.put('/updatezone/:id', updateZone)
+router.post('/', addaffectation)
+router.get('/:companyid', findAffectationByCompany)
+router.delete('/:affid', deleteAffectation)
+router.put('/updateaffectation/:id', updateAffectation)
 
 /* router.put('/updateCompany/RemoveAreaFromCompany',deleteAreaFromCompany)
+router.delete('/deletearea/:id', deleteArea)
 router.put('/updatearea/:id', updateArea)
- */
+ */ 
 
 
 //i need to check for every method token and i need to do route protection based on roles 
