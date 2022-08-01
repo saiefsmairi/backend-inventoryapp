@@ -30,8 +30,12 @@ const findAffectationByCompany = async (req, res) => {
     Affectation.find({ company: req.params.companyid }, function (err, aff) {
         res.status(200).json(aff)
     }).populate('employee').populate('zone')
+}
 
-
+const findAffectationByEmployee = async (req, res) => {
+    Affectation.find({ employee: req.params.employeeid }, function (err, aff) {
+        res.status(200).json(aff)
+    }).populate('employee').populate('zone').populate('company')
 }
 
 const deleteAffectation = async (req, res) => {
@@ -53,7 +57,7 @@ const deleteAffectation = async (req, res) => {
 const updateAffectation = async (req, res, next) => {
     console.log(req.params.id)
     console.log(req.body)
-    
+
     const updatedAffectation = await Affectation.findByIdAndUpdate(req.params.id, req.body, {});
     res.status(200).json({
         status: 'success',
@@ -68,5 +72,6 @@ module.exports = {
     addaffectation,
     findAffectationByCompany,
     deleteAffectation,
-    updateAffectation
+    updateAffectation,
+    findAffectationByEmployee
 }

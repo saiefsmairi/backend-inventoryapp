@@ -7,7 +7,9 @@ var Product = new Schema(
         code: String,
         quantity: String,
         price: String,
-        zone: { type: Schema.Types.ObjectId, ref: "zones" },
+        employee: { type: Schema.Types.ObjectId, ref: "users" },
+
+       // zone: { type: Schema.Types.ObjectId, ref: "zones" },
     }
 );
 
