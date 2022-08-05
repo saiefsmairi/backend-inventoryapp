@@ -15,7 +15,8 @@ const addProduct = asyncHandler(async (req, res) => {
         code: codeabarProd,
         quantity: quantity,
         price: price,
-        employee: idemployee
+        employee: idemployee,
+        zone: zone
     })
 
     console.log(zone)
@@ -37,7 +38,25 @@ const addProduct = asyncHandler(async (req, res) => {
 
 })
 
+const FindProductsById = async (req, res, next) => {
+    var prods = []
+    var prods2 = []
 
+    prods.push(req.body.data)
+    prods.forEach(element => {
+        console.log(element)
+        Product.find({ _id: element.product }, function (err, prod) {
+            console.log(prod)
+            prods2.push(prod)
+            res.status(200).json(prod)
+        }).populate('zone').populate('employee');
+
+    });       
+
+   
+
+}
 module.exports = {
-    addProduct
+    addProduct,
+    FindProductsById
 }

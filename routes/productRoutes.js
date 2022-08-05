@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const {
-    addProduct
+    addProduct,FindProductsById
 } = require('../controllers/productController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
 router.post('/', addProduct)
+router.post('/FindProductsById', FindProductsById)
 
 
 
