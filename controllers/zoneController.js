@@ -3,6 +3,7 @@ const Company = require('../models/company')
 const User = require('../models/user')
 const Area = require('../models/area')
 const Zone = require('../models/zone')
+const Product = require('../models/product')
 
 // @desc    add new zone and assign it a area
 // @route   POST /zone
@@ -47,33 +48,52 @@ const FindZoneByArea = async (req, res, next) => {
 
 }
 
+//nwali ne5dh result mtaa findzoneby area mel res.data fel front w nestaaml result mteha fel fonction o5ra
+const FindZoneByArea2 =  (req, res, next) => {
+    var products = []
+    var zones = []
+    zones.push(req.body.data)
+    zones[0].forEach(element => {
+        products.push(element.products)
+                                
+      /*  Product.find({ zone: element._id }, function (err, prod) {
+        products.push(prod)
+        console.log(prod)
+        })  */
+    });
+   res.status(200).json(  products)
+
+}
+
+
+
 const deleteZoneFromArea = async (req, res, next) => {
     console.log(req.body)
     Zone.findById({ _id: req.body.zoneid }, function (err, user) {
-            try {
-                Area.findByIdAndUpdate({ _id: req.body.areaid }, { $pull: { zones: { zone: user } } }, function (err, ff) {
-                    console.log(ff)
-                    if (err) {
-                        res.status(400).json({
-                            status: 'failed',
-                            message: 'error is deleteAreaFromCompany method',
-                        });
-                    }
-                    else {
-                        Zone.findByIdAndDelete(req.body.zoneid);
-                        res.status(200).json({
-                            status: 'success',
-                            message: 'an area has been deleted from the company succesfully',
-                            data: {
-                                company: ff,
-                            },
-                        });
-                    }
+        try {
+            Area.findByIdAndUpdate({ _id: req.body.areaid }, { $pull: { zones: { zone: user } } }, function (err, ff) {
+                console.log(ff)
+                if (err) {
+                    res.status(400).json({
+                        status: 'failed',
+                        message: 'error is deleteAreaFromCompany method',
+                    });
+                }
+                else {
+                    Zone.findByIdAndDelete(req.body.zoneid);
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'an area has been deleted from the company succesfully',
+                        data: {
+                            company: ff,
+                        },
+                    });
+                }
 
-                })
-            } catch (error) {
-                console.log(error)
-            }
+            })
+        } catch (error) {
+            console.log(error)
+        }
     });
 
 
@@ -91,24 +111,26 @@ const deleteZone = async (req, res) => {
 }
 
 
-/*
 
-const updateArea = async (req, res, next) => {
+
+const updateZone = async (req, res, next) => {
     console.log(req.body)
-    const updatedArea = await Area.findByIdAndUpdate(req.params.id, req.body, {});
+    const updatedZone = await Zone.findByIdAndUpdate(req.params.id, req.body, {});
 
     res.status(200).json({
         status: 'success',
         data: {
-            company: updatedArea,
+            company: updatedZone,
         },
     });
 };
-  */
+
 
 module.exports = {
     addZone,
     FindZoneByArea,
     deleteZoneFromArea,
-    deleteZone
+    deleteZone,
+    updateZone,
+    FindZoneByArea2
 }

@@ -6,7 +6,11 @@ var Zone = new Schema(
         name: String,
         code: String,
         area: { type: Schema.Types.ObjectId, ref: "areas" },
-
+        products: [
+            {
+                product: { type: Schema.Types.ObjectId, ref: "products" },
+            },
+        ],
     }
 );
 

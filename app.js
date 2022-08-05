@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 
 app.use('/', indexRouter);
 app.use('/users', require('./routes/userRoutes'));
@@ -28,6 +28,7 @@ app.use('/company', require('./routes/companyRoutes'));
 app.use('/area', require('./routes/areaRoutes'));
 app.use('/zone', require('./routes/zoneRoutes'));
 app.use('/affectation', require('./routes/AffectationRoutes'));
+app.use('/product', require('./routes/productRoutes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
