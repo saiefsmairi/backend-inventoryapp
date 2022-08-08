@@ -1,18 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const {
-  registerUser,loginUser,getMe,getAllUsers,deleteAllUsers,deleteusersApi,updateUser
+  registerUser, loginUser, getMe, getAllUsers, deleteAllUsers, deleteusersApi, updateUser, updateAdminCompany
 } = require('../controllers/userController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
 router.post('/', registerUser)
 router.post('/login', loginUser)
-router.get('/me', protect,getMe)
-router.get('/users', protect,getAllUsers)
-router.delete('/:id',deleteAllUsers)
-router.delete('/useroutes/deleteallemployees',deleteusersApi) //this api delete all users with role employee
-router.put('/updateuser/:id',protect ,updateUser)
+router.get('/me', protect, getMe)
+router.get('/users', protect, getAllUsers)
+router.delete('/:id', deleteAllUsers)
+router.delete('/useroutes/deleteallemployees', deleteusersApi) //this api delete all users with role employee
+router.put('/updateuser/:id', protect, updateUser)
+router.put('/updateAdminCompanyuser/wiw1/wiw/:id', updateAdminCompany)
 
 //router.get('/me', protect,verifyRoles("ROLE_ADMIN_COMPANY"),getMe)
 
