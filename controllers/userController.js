@@ -63,6 +63,8 @@ const loginUser = asyncHandler(async (req, res) => {
         res.json({
             _id: user.id,
             firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
             email: user.email,
             role: user.role,
             token: generateToken(user._id),
@@ -91,7 +93,7 @@ const generateToken = (id) => {
 }
 
 const getAllUsers = async (req, res) => {
-    User.find({ }, function (err, users) {
+    User.find({}, function (err, users) {
         res.send(users)
     });
 
@@ -116,13 +118,10 @@ const deleteusersApi = async (req, res) => {
 
 //Admin societe updating employee informations 
 const updateUser = async (req, res, next) => {
-
     const email = req.body.email
     // Check if user exists
     const user = await User.findById(req.params.id);
-
     let updatedUser = null
-
 
     if (email != user.email) {
         const userExists = await User.findOne({ email })
@@ -168,6 +167,43 @@ const updateUser = async (req, res, next) => {
 };
 
 
+const updateAdminCompany = async (req, res, next) => {
+
+    const email = req.body.email
+    // Check if user exists
+    const user = await User.findById(req.params.id);
+
+    if (email != user.email) {
+        console.log("here4")
+        const userExists = await User.findOne({ email })
+        if (userExists) {
+            res.status(400).json({ message: "user with that email already exists " });
+        }
+        else if (!userExists) {
+            console.log("here2")
+            updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    company: updatedUser,
+                },
+            });
+        }
+    }
+    else {
+        
+    updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+    res.status(200).json({
+        status: 'success',
+        data: {
+            company: updatedUser,
+        },
+    });
+    
+    }
+
+};
+
 
 module.exports = {
     registerUser,
@@ -176,5 +212,6 @@ module.exports = {
     getAllUsers,
     deleteAllUsers,
     deleteusersApi,
-    updateUser
+    updateUser,
+    updateAdminCompany
 }
