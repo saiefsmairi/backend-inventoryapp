@@ -29,7 +29,11 @@ var User = new Schema(
             type: Boolean,
             default: false,
         },
-
+        notifications: [
+            {
+                notification: { type: Schema.Types.ObjectId, ref: "notifications" },
+            },
+        ],
     }
 );
 

@@ -110,9 +110,6 @@ const deleteZone = async (req, res) => {
     });
 }
 
-
-
-
 const updateZone = async (req, res, next) => {
     console.log(req.body)
     const updatedZone = await Zone.findByIdAndUpdate(req.params.id, req.body, {});
@@ -124,6 +121,7 @@ const updateZone = async (req, res, next) => {
         },
     });
 };
+
 
 
 module.exports = {
