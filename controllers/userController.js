@@ -191,15 +191,15 @@ const updateAdminCompany = async (req, res, next) => {
         }
     }
     else {
-        
-    updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
-    res.status(200).json({
-        status: 'success',
-        data: {
-            company: updatedUser,
-        },
-    });
-    
+
+        updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {});
+        res.status(200).json({
+            status: 'success',
+            data: {
+                company: updatedUser,
+            },
+        });
+
     }
 
 };
@@ -213,5 +213,5 @@ module.exports = {
     deleteAllUsers,
     deleteusersApi,
     updateUser,
-    updateAdminCompany
+    updateAdminCompany,
 }
