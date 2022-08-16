@@ -21,7 +21,7 @@ const addProduct = asyncHandler(async (req, res) => {
         zone: zone
     })
 
-  
+
     Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: product } } }, function (err, ff) {
         if (err) {
             res.status(400).json({
@@ -82,8 +82,39 @@ const CountProductsByZone = async (req, res, next) => {
     });
     res.status(200).json(products)
 }
+
+//this method for stats
+//select name count from products where zone=zoneid groupby name
+const CountProductsByZoneStats = async (req, res, next) => {
+    Zone.findById({ _id: req.params.id }, function (err, zone) {
+        console.log(zone)
+        Product.aggregate([
+            { "$match": { zone: zone._id } },
+            { "$group": { _id: "$code", count: { $sum: 1 } } },
+        ],
+            function (err, data) {
+                if (err)
+                    throw err;
+
+                res.status(200).json(data)
+
+            }
+        );
+
+    })
+
+}
+
+
+const findProductsByZone = async (req, res, next) => {
+    Product.find({ zone: req.params.id }, (err, prod) => {
+        res.status(200).json(prod)
+    });
+}
 module.exports = {
     addProduct,
     FindProductsById,
-    CountProductsByZone
+    CountProductsByZone,
+    findProductsByZone,
+    CountProductsByZoneStats
 }

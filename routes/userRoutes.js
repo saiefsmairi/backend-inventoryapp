@@ -1,13 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const {
-  registerUser, loginUser, getMe, getAllUsers, deleteAllUsers, deleteusersApi, updateUser, updateAdminCompany
+  registerUser, loginUser, getMe, getAllUsers, deleteAllUsers, deleteusersApi, updateUser, updateAdminCompany,forgetPassword
 } = require('../controllers/userController')
 const { protect } = require('../middleware/authMiddleware')
 const verifyRoles = require('../middleware/verifyRoles');
 
 router.post('/', registerUser)
 router.post('/login', loginUser)
+router.put('/forgetPassword/test', forgetPassword)
+
 router.get('/me', protect, getMe)
 router.get('/users', protect, getAllUsers)
 router.delete('/:id', deleteAllUsers)
