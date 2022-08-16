@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/user')
+const twilio = require('twilio');
 
 // @desc    Register new user
 // @route   POST /users
@@ -75,6 +76,35 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
+
+const forgetPassword = asyncHandler(async (req, res) => {
+    const { email, password, newpassword } = req.body
+    var newpass
+    // Check for user email
+    const user = await User.findOne({ email })
+    //check if user info email and pass are correct 
+    if (user && (await bcrypt.compare(password, user.password))) {
+        const salt = await bcrypt.genSalt(10)
+        newpass = await bcrypt.hash(newpassword, salt)
+        updatedUser = await User.findByIdAndUpdate(user._id, { password: newpass }, {});
+        const accountSid = 'ACb6f469cc427a1d8ecbfee4779793b6d5'; // Your Account SID from www.twilio.com/console
+        const authToken = 'c955b3bc207df8dac74e4287705484cd'; // Your Auth Token from www.twilio.com/console
+        const client = new twilio(accountSid, authToken);
+
+        client.messages
+        .create({
+          body: 'Hello ,your password has been changed',
+          to: '+21629162035', // Text this number
+          from: '+12517582665', // From a valid Twilio number
+        })
+        .then((message) => console.log(message.sid));
+
+        res.status(200).json(updatedUser)
+
+    } else {
+        res.status(400).json({ message: 'Invalid credentials' })
+    }
+})
 
 // @desc    Get user data
 // @route   GET /users/me
@@ -214,4 +244,5 @@ module.exports = {
     deleteusersApi,
     updateUser,
     updateAdminCompany,
+    forgetPassword
 }

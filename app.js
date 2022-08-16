@@ -65,10 +65,9 @@ const getUser = (username) => {
   return onlineUsers.find((user) => user.username === username);
 };
 
-let notifarray = []
-const addNewnotif = (notif) => {
-  notifarray.push(notif);
-};
+
+
+
 io.on("connection", (socket) => {
   console.log("connected from phone")
   socket.on("newUser", (username) => {
@@ -79,28 +78,31 @@ io.on("connection", (socket) => {
 
   });
   //user has many notifs
-  socket.on("sendNotification", ({ senderName, receiverName, text, zone }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, text, zone, senderFirstName, senderLastName, zonename,date }) => {
+    console.log(onlineUsers)
+
+    console.log("****zonename***")
+    console.log(zonename)
+
     const receiver = getUser(receiverName);
     console.log("****receiver***")
+    console.log(receiver)
+    console.log("****receiverName***")
     console.log(receiverName)
     console.log("****senderName***")
     console.log(senderName)
-
-
-    //user find by id : 
-    //boucle recevier si array de notifications contient deja des notifs
-    //naamlou notif jdida bel les info eli 3ana w npushiwha fi tableu de notifs w nabaathoha lel receiver
-
-    //or : on peut acceder au array notifs de l'user et on fait update sur ce array npushiw fih notif jdida and we send the array to receiver
 
     var notif = new Notification({
       sender: senderName,
       receiver: receiverName,
       text,
-      zone
+      zone,
+      senderFirstName,
+      senderLastName,
+      zonename,
+      date
     });
     notif.save();
-
 
     User.findByIdAndUpdate({ _id: receiverName }, { $push: { notifications: { notification: notif } } }, function (err, ff) {
       if (err) {
@@ -109,13 +111,9 @@ io.on("connection", (socket) => {
 
     })
 
-    User.findOne({ _id: receiverName }, { "notifications": 1, "_id": 0 }, function (err, user) {
-      console.log("***user***")
-      console.log(user)
-
-    })
+    let state = "new"
     io.to(receiver.socketId).emit("getNotification", {
-      senderName, receiverName, text, zone, notif,
+      senderName, receiverName, text, zonename, notif, senderFirstName, senderLastName, zone, state,date
     });
 
   });
