@@ -24,6 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public/uploads'));
+
 app.use(cors({ origin: true, credentials: true }));
 
 app.use('/', indexRouter);
@@ -78,7 +80,7 @@ io.on("connection", (socket) => {
 
   });
   //user has many notifs
-  socket.on("sendNotification", ({ senderName, receiverName, text, zone, senderFirstName, senderLastName, zonename,date }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, text, zone, senderFirstName, senderLastName, zonename, date }) => {
     console.log(onlineUsers)
 
     console.log("****zonename***")
@@ -113,7 +115,7 @@ io.on("connection", (socket) => {
 
     let state = "new"
     io.to(receiver.socketId).emit("getNotification", {
-      senderName, receiverName, text, zonename, notif, senderFirstName, senderLastName, zone, state,date
+      senderName, receiverName, text, zonename, notif, senderFirstName, senderLastName, zone, state, date
     });
 
   });
