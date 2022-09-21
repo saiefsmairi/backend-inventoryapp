@@ -172,35 +172,58 @@ const uploadinventoryfile = async (req, res, next) => {
 
 
 const codebarFindProducts = async (req, res, next) => {
-    const { codeabarProd, zone, idemployee,company ,quantity} = req.body
+    const { codeabarProd, zone, idemployee, company, quantity, codeabarProdFromMachine, machine } = req.body
+    console.log("***")
+    console.log(codeabarProd)
+    console.log(codeabarProdFromMachine)
+    console.log(machine)
+    console.log("***////")
 
-    FileInventory.find({ company: company}, (err, file) => {
-      
+    FileInventory.find({ company: company }, (err, file) => {
         file[0].productsFromFile.forEach(element => {
-            console.log("***")
             console.log(element['products'].code)
-            if (element['products'].code === codeabarProd) {
-                //res.status(200).json(element['products'])
-                const product = Product.create({
-                    name: element['products'].name,
-                    code: element['products'].code,
-                    //qte yhitha howa fel application
-                    quantity: quantity,
-                    price: element['products'].uniteprice,
-                    employee: idemployee,
-                    zone: zone
-                }, function (err, res) {
-                    Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: res } } }, function (err, ff) {
-                        if (err) {
-                          console.log(err)
-                        }
-    
+            if (machine === 'FromPhone') {
+                if (element['products'].code === codeabarProd) {
+                    const product = Product.create({
+                        name: element['products'].name,
+                        code: element['products'].code,
+                        //qte yhitha howa fel application
+                        quantity: quantity,
+                        price: element['products'].uniteprice,
+                        employee: idemployee,
+                        zone: zone
+                    }, function (err, res) {
+                        Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: res } } }, function (err, ff) {
+                            if (err) {
+                                console.log(err)
+                            }
+
+                        })
                     })
-                })
-
-                
-
+                }
             }
+
+            else if (machine === 'FromMachine') {
+                if (element['products'].code === codeabarProdFromMachine) {
+                    const product = Product.create({
+                        name: element['products'].name,
+                        code: element['products'].code,
+                        //qte yhitha howa fel application
+                        quantity: quantity,
+                        price: element['products'].uniteprice,
+                        employee: idemployee,
+                        zone: zone
+                    }, function (err, res) {
+                        Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: res } } }, function (err, ff) {
+                            if (err) {
+                                console.log(err)
+                            }
+
+                        })
+                    })
+                }
+            }
+
         });
     }).populate('productsFromFile.products');
 }
