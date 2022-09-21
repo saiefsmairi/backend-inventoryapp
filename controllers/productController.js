@@ -2,8 +2,15 @@ const asyncHandler = require('express-async-handler')
 const Company = require('../models/company')
 const User = require('../models/user')
 const Product = require('../models/product')
-const Zone = require('../models/zone')
+const FileInventory = require('../models/fileinventory')
+const ProductsFromFile = require('../models/productsFromFile')
 
+const Zone = require('../models/zone')
+const multer = require("multer");
+const fs = require("fs");
+const { promisify } = require("util");
+const pipeline = promisify(require("stream").pipeline);
+const XLSX = require('xlsx')
 // @desc    create a new product
 // @route   POST /product
 // @access  Public
@@ -111,10 +118,123 @@ const findProductsByZone = async (req, res, next) => {
         res.status(200).json(prod)
     });
 }
+
+const uploadinventoryfile = async (req, res, next) => {
+    const {
+        file, companyid
+    } = req;
+
+    console.log("-----------------")
+    console.log(companyid)
+    const workbook = XLSX.readFile(file.path)
+    const workbookSheet = workbook.SheetNames[0];
+    const dataExcel = XLSX.utils.sheet_to_json(workbook.Sheets[workbookSheet])
+
+    //save the uploaded file infos withtout products extracted 
+    const fileInventory = await FileInventory.create(
+        {
+            filename: file.filename,
+            company: "630798a887dbf563861303fe",
+        }
+    )
+
+    await dataExcel.forEach(element => {
+        ProductsFromFile.create({
+            code: element.code,
+            name: element.name,
+            uniteprice: element.uniteprice,
+        }, function (err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            console.log(res);
+
+            FileInventory.findByIdAndUpdate({ _id: fileInventory._id }, { $push: { productsFromFile: { products: res } } }, function (err, ff) {
+                if (err) {
+                    console.log("****")
+                    console.log(err)
+                }
+            })
+        });
+
+    });
+    /* 
+         ProductsFromFile.insertMany(dataExcel, (function (err) {
+            if (err) {
+                if (err.code === 11000) {
+                    // Duplicate codeabar
+                    return res.status(400).send({ succes: false, message: 'they are already products with same code that exist with products on this file!' });
+                }
+                // Some other error
+                console.log(err)
+            }
+        })); */
+}
+
+
+const codebarFindProducts = async (req, res, next) => {
+    const { codeabarProd, zone, idemployee, company, quantity, codeabarProdFromMachine, machine } = req.body
+    console.log("***")
+    console.log(codeabarProd)
+    console.log(codeabarProdFromMachine)
+    console.log(machine)
+    console.log("***////")
+
+    FileInventory.find({ company: company }, (err, file) => {
+        file[0].productsFromFile.forEach(element => {
+            console.log(element['products'].code)
+            if (machine === 'FromPhone') {
+                if (element['products'].code === codeabarProd) {
+                    const product = Product.create({
+                        name: element['products'].name,
+                        code: element['products'].code,
+                        //qte yhitha howa fel application
+                        quantity: quantity,
+                        price: element['products'].uniteprice,
+                        employee: idemployee,
+                        zone: zone
+                    }, function (err, res) {
+                        Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: res } } }, function (err, ff) {
+                            if (err) {
+                                console.log(err)
+                            }
+
+                        })
+                    })
+                }
+            }
+
+            else if (machine === 'FromMachine') {
+                if (element['products'].code === codeabarProdFromMachine) {
+                    const product = Product.create({
+                        name: element['products'].name,
+                        code: element['products'].code,
+                        //qte yhitha howa fel application
+                        quantity: quantity,
+                        price: element['products'].uniteprice,
+                        employee: idemployee,
+                        zone: zone
+                    }, function (err, res) {
+                        Zone.findByIdAndUpdate({ _id: zone }, { $push: { products: { product: res } } }, function (err, ff) {
+                            if (err) {
+                                console.log(err)
+                            }
+
+                        })
+                    })
+                }
+            }
+
+        });
+    }).populate('productsFromFile.products');
+}
+
+
 module.exports = {
     addProduct,
     FindProductsById,
     CountProductsByZone,
     findProductsByZone,
-    CountProductsByZoneStats
+    CountProductsByZoneStats,
+    uploadinventoryfile,
+    codebarFindProducts
 }
