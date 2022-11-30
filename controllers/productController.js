@@ -121,11 +121,13 @@ const findProductsByZone = async (req, res, next) => {
 
 const uploadinventoryfile = async (req, res, next) => {
     const {
-        file, companyid
+        file, companyid,nam
     } = req;
 
     console.log("-----------------")
-    console.log(companyid)
+    console.log(req.body.companyid)
+    console.log("-----------------")
+
     const workbook = XLSX.readFile(file.path)
     const workbookSheet = workbook.SheetNames[0];
     const dataExcel = XLSX.utils.sheet_to_json(workbook.Sheets[workbookSheet])
@@ -134,7 +136,7 @@ const uploadinventoryfile = async (req, res, next) => {
     const fileInventory = await FileInventory.create(
         {
             filename: file.filename,
-            company: "630798a887dbf563861303fe",
+            company: req.body.companyid,
         }
     )
 
@@ -178,11 +180,14 @@ const codebarFindProducts = async (req, res, next) => {
     console.log(codeabarProdFromMachine)
     console.log(machine)
     console.log("***////")
+    console.log(company)
 
+    
     FileInventory.find({ company: company }, (err, file) => {
         file[0].productsFromFile.forEach(element => {
             console.log(element['products'].code)
             if (machine === 'FromPhone') {
+                console.log('from phone d5al ------')
                 if (element['products'].code === codeabarProd) {
                     const product = Product.create({
                         name: element['products'].name,
