@@ -11,7 +11,7 @@ router.post('/login', loginUser)
 router.put('/forgetPassword/test', forgetPassword)
 
 router.get('/me', protect, getMe)
-router.get('/users', protect, getAllUsers)
+router.get('/users', getAllUsers)
 router.delete('/:id', deleteAllUsers)
 router.delete('/useroutes/deleteallemployees', deleteusersApi) //this api delete all users with role employee
 router.put('/updateuser/:id', protect, updateUser)
